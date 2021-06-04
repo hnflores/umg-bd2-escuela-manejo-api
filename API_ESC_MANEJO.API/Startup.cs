@@ -31,6 +31,8 @@ namespace API_ESC_MANEJO.API
             services.AddTransient<ISecurityService, SecurityService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IVehicleService, VehicleService>();
+            services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<IContractService, ContractService>();
 
             services.AddTransient<IAdminRepository, AdminRepository>();
             services.AddControllers();

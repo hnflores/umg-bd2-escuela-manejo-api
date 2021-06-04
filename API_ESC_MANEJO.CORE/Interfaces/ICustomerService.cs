@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace API_ESC_MANEJO.CORE.Interfaces
 {
-    public interface IUserService
+    public interface ICustomerService
     {
-        Task<ResponseAPI<string>> LoginUser(User user);
-        Task<ResponseAPI<List<User>>> GetDrivers();
+        Task<ResponseAPI<List<Customer>>> GetCustomers();
+        Task<ResponseAPI<Customer>> GetCustomerById(string customerId);
     }
 }

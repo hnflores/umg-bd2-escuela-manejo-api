@@ -16,73 +16,74 @@ namespace API_ESC_MANEJO.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class ContractController : ControllerBase
     {
+
         private readonly ConfigurationMessages _messagesDefault;
         private readonly ILogService _logService;
-        private readonly IUserService _userService;
+        private readonly IContractService _contractService;
         private readonly ISecurityService _securityService;
-        public UserController(ILogService logService, IUserService userService, IOptions<ConfigurationMessages> messagesDefault
-          , ISecurityService securityService)
+        public ContractController(ILogService logService, IOptions<ConfigurationMessages> messagesDefault
+          , ISecurityService securityService, IContractService contractService)
         {
             _logService = logService;
-            _userService = userService;
             _securityService = securityService;
             _messagesDefault = messagesDefault.Value;
+            _contractService = contractService;
         }
 
-        [Route(nameof(LogIn)), HttpPost]
-        public async Task<ResponseAPI<string>> LogIn(User request)
+        [Route(nameof(AddContract)), HttpPost]
+        public async Task<ResponseAPI<string>> AddContract(Contract request)
         {
             ResponseAPI<string> responseAPI = new();
             try
             {
-                _logService.SaveLogApp($"[{nameof(LogIn)} Request] {JsonConvert.SerializeObject(request)}", LogType.Information);
+                _logService.SaveLogApp($"[{nameof(AddContract)} Request] {JsonConvert.SerializeObject(request)}", LogType.Information);
                 #region AUTH
                 if (!_securityService.ValidAuth(HttpContext.Request.Headers["Key-Auth"]))
                 {
-                    _logService.SaveLogApp($"[{nameof(LogIn)} InvalidAuth]", LogType.Information);
+                    _logService.SaveLogApp($"[{nameof(AddContract)} InvalidAuth]", LogType.Information);
                     responseAPI.Code = ResponseCode.Error;
                     responseAPI.Description = _messagesDefault.AuthInvalidMessage;
                     return responseAPI;
                 }
                 #endregion                
-                responseAPI = await _userService.LoginUser(request);
-                _logService.SaveLogApp($"[{nameof(LogIn)} Response] {JsonConvert.SerializeObject(responseAPI)}", LogType.Information);
+                responseAPI = await _contractService.AddContract(request);
+                _logService.SaveLogApp($"[{nameof(AddContract)} Response] {JsonConvert.SerializeObject(responseAPI)}", LogType.Information);
             }
             catch (Exception ex)
             {
                 responseAPI.Code = ResponseCode.FatalError;
                 responseAPI.Description = _messagesDefault.FatalErrorMessage;
-                _logService.SaveLogApp($"[{nameof(UserController)}  {nameof(LogIn)} Exception] {ex.Message}|{ex.StackTrace}", LogType.Error);
+                _logService.SaveLogApp($"[{nameof(ContractController)}  {nameof(AddContract)} Exception] {ex.Message}|{ex.StackTrace}", LogType.Error);
             }
             return responseAPI;
         }
 
-        [Route(nameof(GetDrivers)), HttpPost]
-        public async Task<ResponseAPI<List<User>>> GetDrivers()
+        [Route(nameof(GetContracts)), HttpPost]
+        public async Task<ResponseAPI<List<Contract>>> GetContracts()
         {
-            ResponseAPI<List<User>> responseAPI = new();
+            ResponseAPI<List<Contract>> responseAPI = new();
             try
             {
-                _logService.SaveLogApp($"[{nameof(GetDrivers)} Request]", LogType.Information);
+                _logService.SaveLogApp($"[{nameof(GetContracts)} Request]", LogType.Information);
                 #region AUTH
                 if (!_securityService.ValidAuth(HttpContext.Request.Headers["Key-Auth"]))
                 {
-                    _logService.SaveLogApp($"[{nameof(GetDrivers)} InvalidAuth]", LogType.Information);
+                    _logService.SaveLogApp($"[{nameof(GetContracts)} InvalidAuth]", LogType.Information);
                     responseAPI.Code = ResponseCode.Error;
                     responseAPI.Description = _messagesDefault.AuthInvalidMessage;
                     return responseAPI;
                 }
                 #endregion                
-                responseAPI = await _userService.GetDrivers();
-                _logService.SaveLogApp($"[{nameof(GetDrivers)} Response] {JsonConvert.SerializeObject(responseAPI)}", LogType.Information);
+                responseAPI = await _contractService.GetContracts();
+                _logService.SaveLogApp($"[{nameof(GetContracts)} Response] {JsonConvert.SerializeObject(responseAPI)}", LogType.Information);
             }
             catch (Exception ex)
             {
                 responseAPI.Code = ResponseCode.FatalError;
                 responseAPI.Description = _messagesDefault.FatalErrorMessage;
-                _logService.SaveLogApp($"[{nameof(VehicleController)}  {nameof(GetDrivers)} Exception] {ex.Message}|{ex.StackTrace}", LogType.Error);
+                _logService.SaveLogApp($"[{nameof(VehicleController)}  {nameof(GetContracts)} Exception] {ex.Message}|{ex.StackTrace}", LogType.Error);
             }
             return responseAPI;
         }
