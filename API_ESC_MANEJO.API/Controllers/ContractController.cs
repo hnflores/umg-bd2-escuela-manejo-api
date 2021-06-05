@@ -87,5 +87,90 @@ namespace API_ESC_MANEJO.API.Controllers
             }
             return responseAPI;
         }
+
+        [Route(nameof(DeleteContract)), HttpPost]
+        public async Task<ResponseAPI<string>> DeleteContract(Contract request)
+        {
+            ResponseAPI<string> responseAPI = new();
+            try
+            {
+                _logService.SaveLogApp($"[{nameof(DeleteContract)} Request] {JsonConvert.SerializeObject(request)}", LogType.Information);
+                #region AUTH
+                if (!_securityService.ValidAuth(HttpContext.Request.Headers["Key-Auth"]))
+                {
+                    _logService.SaveLogApp($"[{nameof(DeleteContract)} InvalidAuth]", LogType.Information);
+                    responseAPI.Code = ResponseCode.Error;
+                    responseAPI.Description = _messagesDefault.AuthInvalidMessage;
+                    return responseAPI;
+                }
+                #endregion                
+                responseAPI = await _contractService.DeleteContract(request.ContractId);
+                _logService.SaveLogApp($"[{nameof(DeleteContract)} Response] {JsonConvert.SerializeObject(responseAPI)}", LogType.Information);
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Code = ResponseCode.FatalError;
+                responseAPI.Description = _messagesDefault.FatalErrorMessage;
+                _logService.SaveLogApp($"[{nameof(UserController)}  {nameof(DeleteContract)} Exception] {ex.Message}|{ex.StackTrace}", LogType.Error);
+            }
+            return responseAPI;
+        }
+
+
+        [Route(nameof(GetContract)), HttpPost]
+        public async Task<ResponseAPI<Contract>> GetContract(Contract request)
+        {
+            ResponseAPI<Contract> responseAPI = new();
+            try
+            {
+                _logService.SaveLogApp($"[{nameof(GetContract)} Request] {JsonConvert.SerializeObject(request)}", LogType.Information);
+                #region AUTH
+                if (!_securityService.ValidAuth(HttpContext.Request.Headers["Key-Auth"]))
+                {
+                    _logService.SaveLogApp($"[{nameof(GetContract)} InvalidAuth]", LogType.Information);
+                    responseAPI.Code = ResponseCode.Error;
+                    responseAPI.Description = _messagesDefault.AuthInvalidMessage;
+                    return responseAPI;
+                }
+                #endregion                
+                responseAPI = await _contractService.GetContract(request.ContractId);
+                _logService.SaveLogApp($"[{nameof(GetContract)} Response] {JsonConvert.SerializeObject(responseAPI)}", LogType.Information);
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Code = ResponseCode.FatalError;
+                responseAPI.Description = _messagesDefault.FatalErrorMessage;
+                _logService.SaveLogApp($"[{nameof(ContractController)}  {nameof(GetContract)} Exception] {ex.Message}|{ex.StackTrace}", LogType.Error);
+            }
+            return responseAPI;
+        }
+
+        [Route(nameof(UpdateContract)), HttpPost]
+        public async Task<ResponseAPI<string>> UpdateContract(Contract request)
+        {
+            ResponseAPI<string> responseAPI = new();
+            try
+            {
+                _logService.SaveLogApp($"[{nameof(UpdateContract)} Request] {JsonConvert.SerializeObject(request)}", LogType.Information);
+                #region AUTH
+                if (!_securityService.ValidAuth(HttpContext.Request.Headers["Key-Auth"]))
+                {
+                    _logService.SaveLogApp($"[{nameof(UpdateContract)} InvalidAuth]", LogType.Information);
+                    responseAPI.Code = ResponseCode.Error;
+                    responseAPI.Description = _messagesDefault.AuthInvalidMessage;
+                    return responseAPI;
+                }
+                #endregion                
+                responseAPI = await _contractService.UpdateContract(request);
+                _logService.SaveLogApp($"[{nameof(UpdateContract)} Response] {JsonConvert.SerializeObject(responseAPI)}", LogType.Information);
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Code = ResponseCode.FatalError;
+                responseAPI.Description = _messagesDefault.FatalErrorMessage;
+                _logService.SaveLogApp($"[{nameof(ContractController)}  {nameof(UpdateContract)} Exception] {ex.Message}|{ex.StackTrace}", LogType.Error);
+            }
+            return responseAPI;
+        }
     }
 }

@@ -194,6 +194,36 @@ namespace API_ESC_MANEJO.CORE.Services
             return responseAPI;
         }
 
+        public async Task<ResponseAPI<string>> DeleteVehicle(string vehicleId)
+        {
+            ResponseAPI<string> responseAPI = new();
+            try
+            {
+                _bdParameters.Add("@i_operation", "DELETE_VEHICLE");
+                _bdParameters.Add("@i_vehiculo_id", vehicleId);               
+
+                _responseBD = await _adminRepository.CallSP(_sp, _bdParameters);
+                responseAPI.Code = _responseBD.Code;
+                if (_responseBD.Code != ResponseCode.Success)
+                {
+                    if (_responseBD.Code == ResponseCode.Error)
+                        responseAPI.Description = _responseBD.Description;
+                    else if (_responseBD.Code == ResponseCode.FatalError)
+                        responseAPI.Description = _messagesDefault.FatalErrorMessage;
+                    else if (_responseBD.Code == ResponseCode.Timeout)
+                        responseAPI.Description = _messagesDefault.TimeoutMessage;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Code = ResponseCode.FatalError;
+                _logService.SaveLogApp($"[{nameof(DeleteVehicle)} - Exception] {ex.Message} | {ex.StackTrace}", LogType.Error);
+                responseAPI.Description = _messagesDefault.FatalErrorMessage;
+            }
+            return responseAPI;
+        }
+
 
     }
 }

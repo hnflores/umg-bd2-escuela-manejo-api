@@ -75,11 +75,14 @@ namespace API_ESC_MANEJO.CORE.Services
                     {
                         users.Add(new User
                         {
-                            ColaboradorId = Convert.ToString(dr["ColaboradorId"]),
+                            ColaboradorId = Convert.ToInt32(dr["ColaboradorId"]),
                             Nombre = Convert.ToString(dr["Nombre"]),
                             Apellido = Convert.ToString(dr["Apellido"]),
                             Correo = Convert.ToString(dr["Correo"]),
-                            Estado = Convert.ToString(dr["Estado"])
+                            Estado = Convert.ToString(dr["Estado"]),
+                            Departamento = Convert.ToString(dr["Departamento"]),
+                            Municipio = Convert.ToString(dr["Municipio"]),
+                            Colonia = Convert.ToString(dr["Colonia"])
                         });
                     }
                     responseAPI.Data = users;

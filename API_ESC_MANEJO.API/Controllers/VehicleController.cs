@@ -141,5 +141,33 @@ namespace API_ESC_MANEJO.API.Controllers
             }
             return responseAPI;
         }
+
+        [Route(nameof(DeleteVehicle)), HttpPost]
+        public async Task<ResponseAPI<string>> DeleteVehicle(Vehicle request)
+        {
+            ResponseAPI<string> responseAPI = new();
+            try
+            {
+                _logService.SaveLogApp($"[{nameof(DeleteVehicle)} Request] {JsonConvert.SerializeObject(request)}", LogType.Information);
+                #region AUTH
+                if (!_securityService.ValidAuth(HttpContext.Request.Headers["Key-Auth"]))
+                {
+                    _logService.SaveLogApp($"[{nameof(DeleteVehicle)} InvalidAuth]", LogType.Information);
+                    responseAPI.Code = ResponseCode.Error;
+                    responseAPI.Description = _messagesDefault.AuthInvalidMessage;
+                    return responseAPI;
+                }
+                #endregion                
+                responseAPI = await _vehicleService.DeleteVehicle(request.VehicleId);
+                _logService.SaveLogApp($"[{nameof(DeleteVehicle)} Response] {JsonConvert.SerializeObject(responseAPI)}", LogType.Information);
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Code = ResponseCode.FatalError;
+                responseAPI.Description = _messagesDefault.FatalErrorMessage;
+                _logService.SaveLogApp($"[{nameof(UserController)}  {nameof(DeleteVehicle)} Exception] {ex.Message}|{ex.StackTrace}", LogType.Error);
+            }
+            return responseAPI;
+        }
     }
 }

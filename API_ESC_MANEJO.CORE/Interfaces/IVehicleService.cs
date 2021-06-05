@@ -11,5 +11,6 @@ namespace API_ESC_MANEJO.CORE.Interfaces
         Task<ResponseAPI<Vehicle>> GetVehicle(string vehicleId);
         Task<ResponseAPI<string>> AddVehicle(Vehicle vehicle);
         Task<ResponseAPI<string>> UpdateVehicle(Vehicle vehicle);
+        Task<ResponseAPI<string>> DeleteVehicle(string vehicleId);
     }
 }

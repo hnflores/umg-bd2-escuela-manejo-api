@@ -8,5 +8,9 @@ namespace API_ESC_MANEJO.CORE.Interfaces
     {
         Task<ResponseAPI<string>> AddContract(Entities.Contract contract);
         Task<ResponseAPI<List<Entities.Contract>>> GetContracts();
+
+        Task<ResponseAPI<string>> DeleteContract(int contractId);
+        Task<ResponseAPI<Entities.Contract>> GetContract(int contractId);
+        Task<ResponseAPI<string>> UpdateContract(Entities.Contract contract);
     }
 }
